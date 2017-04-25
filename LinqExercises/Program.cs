@@ -139,6 +139,109 @@ namespace LinqExercises
             Console.WriteLine("------------------------------------------------");
             Console.WriteLine("Exercise #8 - Sort a result set on two columns  ");
             Console.WriteLine("------------------------------------------------");
+            Inventory shorts = new Inventory("shorts", 20, 20);
+            Inventory pants = new Inventory("pants", 1000, 999);
+            Inventory tshirts = new Inventory("tshirts", 100, 100);
+            Inventory sweaters = new Inventory("sweaters", 50, 10);
+            Inventory suits = new Inventory("suits", 50, 49);
+            Inventory jackets = new Inventory("jackets", 44, 44);
+            Inventory shoes = new Inventory("shoes", 1000, 999);
+            Inventory tanktops = new Inventory("tanktops", 77, 49);
+            Inventory socks = new Inventory("socks", 25, 10);
+            Inventory sandles = new Inventory("sandles", 60, 49);
+            List<Inventory> clothsStore = new List<Inventory>() { shorts, pants, tshirts, sweaters, suits, jackets, shoes, tanktops, socks, sandles };
+
+            List<Inventory> orderedStore = OrderInventoryByNameAndMax(clothsStore);
+
+            Console.Write("Products Ordered: ");
+            foreach (var product in orderedStore)
+                Console.Write(product.product + ": " + product.maxSupply + ", ");
+            Console.WriteLine("");
+
+            Console.WriteLine("");
+            Console.WriteLine("------------------------------------------------");
+            Console.WriteLine("Exercise #9 - Linq Equivalent of a foreach loop  ");
+            Console.WriteLine("------------------------------------------------");
+            Console.WriteLine("Answer - myStore.Foreach(p => console.write(p.product)");
+            Console.WriteLine("------------------------------------------------");
+
+            Console.WriteLine("");
+            Console.WriteLine("------------------------------------------------");
+            Console.WriteLine("Exercise #10 - .First vs. .FirstOrDefault      ");
+            Console.WriteLine("------------------------------------------------");
+            Console.WriteLine("Answer - use .First when you know there will be an element in the sequence");
+            Console.WriteLine("         use .FirstOrDefault if you check for a first element");
+            Console.WriteLine("------------------------------------------------");
+
+            Console.WriteLine("");
+            Console.WriteLine("------------------------------------------------");
+            Console.WriteLine("Exercise #11 - List<string> to string with ','  ");
+            Console.WriteLine("------------------------------------------------");
+
+            string peopleString = GetStringFromList(morePeople);
+            Console.WriteLine($"People as String: {peopleString}");
+
+            Console.WriteLine("");
+            Console.WriteLine("------------------------------------------------");
+            Console.WriteLine("Exercise #12 - List<Inventory> to string  ','  ");
+            Console.WriteLine("------------------------------------------------");
+
+            string storeString = GetStringFromClass(clothsStore);
+            Console.WriteLine($"Inventory Class as String: {storeString}");
+
+            Console.WriteLine("");
+            Console.WriteLine("------------------------------------------------");
+            Console.WriteLine("Exercise #13 - Int List and find every multiple of number ");
+            Console.WriteLine("------------------------------------------------");
+            Random rand = new Random();
+            List<int> myints = new List<int>();
+            int aNumber = 7;
+
+            for (int i = 0; i < 500; i++)
+                myints.Add(rand.Next(0, 500));
+
+            List<int> multiples = GetMultiplesFromList(myints, aNumber);
+            Console.WriteLine($"Multiples of {aNumber}");
+            foreach(var i in multiples)
+               Console.Write(i + ", ");
+            Console.WriteLine("");
+
+            Console.WriteLine("");
+            Console.WriteLine("------------------------------------------------");
+            Console.WriteLine("Exercise #14 - Int List is one divisible by 5? ");
+            Console.WriteLine("------------------------------------------------");
+            List<int> myintsList = new List<int>();
+            int aNum = 5;
+
+            for (int i = 0; i < 10; i++)
+                myintsList.Add(rand.Next(0, 500));
+
+            foreach (var i in myintsList)
+                Console.Write(i+", ");
+            Console.WriteLine("");
+            if (CheckMultiplesFromList(myintsList, aNum))
+                Console.WriteLine("Yes, there was a multiple of 5");
+            else
+                Console.WriteLine("No, there was not a multiple of 5");
+
+            Console.WriteLine("");
+            Console.WriteLine("------------------------------------------------");
+            Console.WriteLine("Exercise #15 - Get Max Value from List        ");
+            Console.WriteLine("------------------------------------------------");
+
+            foreach (var i in myintsList)
+                Console.Write(i + ", ");
+            Console.WriteLine("");
+            int maxValue = GetMaxValueInList(myintsList);
+            Console.WriteLine($"Max Value: {maxValue}");
+
+            Console.WriteLine("");
+            Console.WriteLine("------------------------------------------------");
+            Console.WriteLine("Exercise #16 - Select after From in Linq          ");
+            Console.WriteLine("------------------------------------------------");
+            Console.WriteLine("Answer - select will determine the return value and ");
+            Console.WriteLine("         this is a way to differentiate between SQL");
+            Console.WriteLine("------------------------------------------------");
             Console.ReadLine();
 
         }
@@ -207,6 +310,40 @@ namespace LinqExercises
             List<string> productsToOrder = new List<string>();
             productsToOrder.AddRange(myInventory.Where(p => p.actualSupply == p.maxSupply).Select(x => x.product));
             return productsToOrder;
+        }
+
+        static List<Inventory> OrderInventoryByNameAndMax(List<Inventory> myStore)
+        {
+            List<Inventory> OrderedList = new List<Inventory>();
+            OrderedList.AddRange(myStore.OrderBy(p => p.product).ThenBy(p => p.maxSupply));
+            return OrderedList;
+        }
+        static string GetStringFromList(List<string> aList)
+        {
+            var myList = String.Join(", ", aList.ToArray());
+            return myList;
+        }
+        static string GetStringFromClass(List<Inventory> myStore)
+        {
+            string myList = "";
+            myList = String.Join(", ", myStore.Select(p => $"{p.product}:Max-{p.maxSupply}:Actual-{p.actualSupply}".ToString()));
+            return myList;
+        }
+        static List<int> GetMultiplesFromList(List<int> aList, int aMultiple)
+        {
+            List<int> multipleList = new List<int>();
+            multipleList.AddRange(aList.Where(i => i % aMultiple == 0));
+            return multipleList;
+        }
+        static bool CheckMultiplesFromList(List<int> aList, int aMultiple)
+        {
+            var subList = aList.Where(i => i % aMultiple == 0);
+            return subList.Count() > 0;
+        }
+        static int GetMaxValueInList(List<int> aList)
+        {
+            return aList.Max();
+
         }
     }
 }
